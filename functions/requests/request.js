@@ -5,8 +5,6 @@ module.exports = function request(method, url, headers = {}, body = null) {
     throw new Error(`Invalid method: ${method}`);
   }
 
-  console.log('requesting url', url);
-
   let urlObject;
 
   try {

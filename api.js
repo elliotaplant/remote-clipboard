@@ -1,5 +1,5 @@
 function makePaste(body) {
-  let url = '/.netlify/functions/paste';
+  const url = 'https://remote-clipboard.netlify.app/.netlify/functions/paste';
   let options = {
     method: 'POST',
     headers: {
@@ -7,9 +7,8 @@ function makePaste(body) {
     },
     body,
   };
-  if (location.host === '') {
-    url = 'https://remote-clipboard.netlify.app' + url;
 
+  if (location.host !== 'remote-clipboard.netlify.app') {
     options = {
       ...options,
       mode: 'no-cors', // no-cors, *cors, same-origin
@@ -23,14 +22,16 @@ function makePaste(body) {
 function getPaste() {
   let url = '/.netlify/functions/copy';
   let options = {};
-  if (location.host === '') {
-    url = 'https://remote-clipboard.netlify.app' + url;
 
-    options = {
-      mode: 'no-cors', // no-cors, *cors, same-origin
-      credentials: 'omit', // include, *same-origin, omit
-    };
-  }
+  // if (location.host !== 'remote-clipboard.netlify.app') {
+  url = 'https://remote-clipboard.netlify.app' + url;
+
+  options = {
+    mode: 'no-cors', // no-cors, *cors, same-origin
+    credentials: 'omit', // include, *same-origin, omit
+  };
+  // }
+  console.log('url', url);
 
   return fetch(url, options).then(resp => resp.text());
 }
