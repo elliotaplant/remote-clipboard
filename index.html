@@ -2,24 +2,45 @@
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
+    <style media="screen">
+      body {
+        font-family: monospace;
+        text-align: center;
+      }
+
+      h1 {
+        font-size: 10vw;
+      }
+    </style>
     <title>Remote clipboard</title>
   </head>
   <body>
-    <h1>The body</h1>
-    <input type="text">
+    <h1>Paste</h1>
+    <div id="pasted"></div>
 
     <script type="text/javascript">
-      document.onpaste = function(event){
-        var items = (event.clipboardData || event.originalEvent.clipboardData).items;
-        console.log(JSON.stringify(items)); // will give you the mime types
-        for (index in items) {
-          var item = items[index];
-          if (item.kind === 'file') {
-            var blob = item.getAsFile();
-            var reader = new FileReader();
-            reader.onload = function(event){
-              console.log(event.target.result)}; // data url!
-            reader.readAsDataURL(blob);
+      function handleImage(blob) {
+          var reader = new FileReader();
+          reader.onload = function(event) {
+            pasted.innerHTML = `<img src="${event.target.result}"/>`
+          };
+          reader.readAsDataURL(blob);
+      }
+
+      function handleText(text) {
+        pasted.innerHTML = `<code>${text}</code>`
+      }
+
+      document.onpaste = function (event) {
+        const { items } = (event.clipboardData  || event.originalEvent.clipboardData);
+        var blob = null;
+        for (var i = 0; i < items.length; i++) {
+          const item = items[i]
+          console.log('item', item);
+          if (item.type.indexOf('image') === 0) {
+            handleImage(item.getAsFile())
+          } else if (item.type === 'text/plain') {
+            item.getAsString(handleText)
           }
         }
       }
