@@ -17,24 +17,19 @@
   </head>
   <body>
     <h1>Click to copy</h1>
+    <button type="button" id="copybtn">CLICK HERE</button>
     <div id="copied"></div>
     <input id="inputEl" />
     <script type="text/javascript" src="api.js"></script>
     <script type="text/javascript">
-      document.body.onclick = () => {
+      copybtn.onclick = () => {
         copied.innerHTML = `Fetching paste`;
         getPaste()
           .then((resp) => {
             copied.innerHTML = `<code>${resp}</code>`;
             return resp
           })
-          .then(resp => {
-            if (isIos()) {
-              return iosCopyToClipboard(resp)
-            } else {
-              return navigator.clipboard.writeText(resp)
-            }
-          })
+          .then(resp => navigator.clipboard.writeText(resp))
           .catch(console.error);
       }
 
