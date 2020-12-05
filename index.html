@@ -47,15 +47,25 @@
       }
 
       function makePaste(body) {
-        fetch('/.netlify/functions/paste', {
+        let url = '/.netlify/functions/paste';
+        let options = {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json',
+            'content-type': 'application/json',
           },
           body,
-          mode: 'no-cors', // no-cors, *cors, same-origin
-          credentials: 'omit', // include, *same-origin, omit
-        })
+        }
+        if (location.host === '') {
+          url = 'https://remote-clipboard.netlify.app' + url;
+
+          options = {
+            ...options,
+            mode: 'no-cors', // no-cors, *cors, same-origin
+            credentials: 'omit', // include, *same-origin, omit
+          }
+        }
+
+        fetch(url, options)
           .then(r => r.json())
           .then(j => {
             pasted.innerHTML = `<code>${JSON.stringify(j)}</code>`
