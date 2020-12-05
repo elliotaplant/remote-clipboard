@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Remote clipboard</title>
+  </head>
+  <body>
+    <h1>The body</h1>
+    <input type="text">
+
+    <script type="text/javascript">
+      document.onpaste = function(event){
+        var items = (event.clipboardData || event.originalEvent.clipboardData).items;
+        console.log(JSON.stringify(items)); // will give you the mime types
+        for (index in items) {
+          var item = items[index];
+          if (item.kind === 'file') {
+            var blob = item.getAsFile();
+            var reader = new FileReader();
+            reader.onload = function(event){
+              console.log(event.target.result)}; // data url!
+            reader.readAsDataURL(blob);
+          }
+        }
+      }
+    </script>
+  </body>
+</html>
