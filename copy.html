@@ -23,7 +23,7 @@
       document.body.onclick = () => {
         getPaste()
           .then((resp) => {
-            copied.innerHTML = `<code>${JSON.stringify(resp)}</code>`;
+            copied.innerHTML = `<code>${resp}</code>`;
             return resp
           })
           .then(resp => navigator.clipboard.writeText(resp))

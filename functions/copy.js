@@ -7,12 +7,12 @@ exports.handler = async function(event) {
     const paste = await getPaste(DEFAULT_USER_ID);
     return {
       statusCode: 200,
-      body: JSON.stringify({ message: paste })
+      body: paste,
     };
   } catch (e) {
     return {
       statusCode: 500,
-      body: JSON.stringify({ message: `Something went wrong: "${e}"` })
+      body: `Something went wrong: "${e}"`
     };
   }
 };
