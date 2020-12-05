@@ -32,7 +32,7 @@ function getPaste() {
     };
   }
 
-  return fetch(url, options);
+  return fetch(url, options).then(resp => resp.text());
 }
 
 window.makePaste = makePaste;
