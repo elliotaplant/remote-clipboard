@@ -1,6 +1,19 @@
-exports.handler = async function(event, context) {
-  return {
-    statusCode: 200,
-    body: JSON.stringify({ message: 'Wello World' })
-  };
+const createPaste = require('./requests/airtable');
+
+exports.handler = async function(event) {
+  console.log('event', event);
+
+  try {
+    await createPaste(event.body);
+    return {
+      statusCode: 200,
+      body: JSON.stringify({ message: `Created paste "${event.body}"` })
+    };
+  } catch (e) {
+    return {
+      statusCode: 500,
+      body: JSON.stringify({ message: `Something went wrong: "${e}"` })
+    };
+  }
+
 };
