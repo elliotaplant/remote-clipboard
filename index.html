@@ -16,6 +16,7 @@
   </head>
   <body>
     <h1>Paste</h1>
+    <button type="button" name="button">Try fn</button>
     <div id="pasted"></div>
 
     <script type="text/javascript">
@@ -48,7 +49,9 @@
       function callFn() {
         fetch('/.netlify/functions/paste')
           .then(r => r.json())
-          .then(console.log)
+          .then(j => {
+            pasted.innerHTML = `<code>${j}</code>`
+          })
           .catch(console.error)
       }
     </script>
