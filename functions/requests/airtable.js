@@ -15,6 +15,7 @@ async function getPastes(user_id) {
 }
 
 async function deletePastes(recordIds) {
+  console.log('deleting pastes', recordIds.join(', '));
   const resp = await request(
     'delete',
     `${API_ROOT}?${recordIds.map(r => `records[]=${r}`).join('&')}`,
@@ -25,9 +26,11 @@ async function deletePastes(recordIds) {
 
 async function createPaste(text) {
   const { records } = await getPastes(DEFAULT_USER_ID);
+  console.log('Founds pastes', records);
   if (records && records.length) {
     await deletePastes(records.map(r => r.id));
   }
+  console.log('creating new paste', text);
   const body = JSON.stringify({ records: [{ fields: { paste: text, user_id: DEFAULT_USER_ID } }] });
   return request('post', API_ROOT, authHeader, body);
 }
