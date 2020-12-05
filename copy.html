@@ -18,6 +18,7 @@
   <body>
     <h1>Click to copy</h1>
     <div id="copied"></div>
+    <input id="inputEl" />
     <script type="text/javascript" src="api.js"></script>
     <script type="text/javascript">
       document.body.onclick = () => {
@@ -27,8 +28,50 @@
             copied.innerHTML = `<code>${resp}</code>`;
             return resp
           })
-          .then(resp => navigator.clipboard.writeText(resp))
+          .then(resp => {
+            if (isIos()) {
+              return iosCopyToClipboard(resp)
+            } else {
+              return navigator.clipboard.writeText(resp)
+            }
+          })
           .catch(console.error);
+      }
+
+      function isIos() {
+        return [
+          'iPad Simulator',
+          'iPhone Simulator',
+          'iPod Simulator',
+          'iPad',
+          'iPhone',
+          'iPod'
+        ].includes(navigator.platform)
+        // iPad on iOS 13 detection
+        || (navigator.userAgent.includes("Mac") && "ontouchend" in document)
+      }
+
+      function iosCopyToClipboard(text) {
+        inputEl.value = text;
+        const oldContentEditable = inputEl.contentEditable;
+        const oldReadOnly = inputEl.readOnly;
+        const range = document.createRange();
+
+        inputEl.contentEditable = true;
+        inputEl.readOnly = false;
+        range.selectNodeContents(inputEl);
+
+        const selection = window.getSelection();
+        selection.removeAllRanges();
+        selection.addRange(range);
+
+        // A big number, to cover anything that could be inside the element.
+        inputEl.setSelectionRange(0, 999999);
+
+        inputEl.contentEditable = oldContentEditable;
+        inputEl.readOnly = oldReadOnly;
+
+        document.execCommand('copy');
       }
 
     </script>
