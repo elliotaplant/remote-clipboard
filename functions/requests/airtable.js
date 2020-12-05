@@ -16,12 +16,13 @@ async function getPastes(user_id) {
   console.log('json', json);
 }
 
-function createPaste(text) {
-  getPastes(DEFAULT_USER_ID);
-  // const body = JSON.stringify({ records: [{ fields: { paste: text, user_id: DEFAULT_USER_ID } }] });
-  // const headers = { ...authHeader, 'Content-Type': 'application/json' };
-  //
-  // return request('post', API_ROOT, headers, body);
+async function createPaste(text) {
+  await getPastes(DEFAULT_USER_ID);
+  console.log('done getting pastes');
+  const body = JSON.stringify({ records: [{ fields: { paste: text, user_id: DEFAULT_USER_ID } }] });
+  const headers = { ...authHeader, 'Content-Type': 'application/json' };
+
+  return request('post', API_ROOT, headers, body);
 }
 
 module.exports = {
