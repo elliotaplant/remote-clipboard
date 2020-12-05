@@ -7,13 +7,11 @@ const DEFAULT_USER_ID = 1;
 
 async function getPastes(user_id) {
   const resp = await request(
-    'post',
+    'get',
     `${API_ROOT}?maxRecords=3&view=Grid%20view&filterByFormula=%28%7Buser_id%7D%20%3D%20${user_id}%29`,
     authHeader
   );
-  console.log('resp', resp);
-  const json = await resp.json();
-  console.log('json', json);
+  return resp;
 }
 
 async function createPaste(text) {
