@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <style media="screen">
+      body {
+        font-family: monospace;
+        text-align: center;
+      }
+
+      h1 {
+        font-size: 10vw;
+        font-weight: bold;
+      }
+    </style>
+    <title>Remote Clipboard</title>
+  </head>
+  <body>
+    <h1>Click to copy</h1>
+    <div id="copied"></div>
+    <script type="text/javascript" src="api.js">
+
+    </script>
+    <script type="text/javascript">
+      document.body.onclick = () => {
+        getPaste()
+          .then(resp => {
+            copied.innerHTML = `<code>${JSON.stringify(resp)}</code>`
+          })
+          .catch(console.error)
+      }
+
+    </script>
+  </body>
+</html>

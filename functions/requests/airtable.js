@@ -14,6 +14,15 @@ async function getPastes(user_id) {
   return resp.body;
 }
 
+async function getPaste(user_id) {
+  const pastes = await getPastes(user_id);
+  if (pastes.length) {
+    return pastes[0].fields.paste;
+  }
+  return 'No paste found';
+}
+
+
 async function deletePastes(recordIds) {
   console.log('deleting pastes', recordIds.join(', '));
   const resp = await request(
@@ -35,5 +44,6 @@ async function createPaste(text) {
 
 module.exports = {
   createPaste,
-  getPastes,
+  getPaste,
+  DEFAULT_USER_ID,
 };

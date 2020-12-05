@@ -20,6 +20,7 @@
     <button type="button" name="button" onclick="callFn()">Try fn</button>
     <div id="pasted"></div>
 
+    <script type="text/javascript" src="api.js">
     <script type="text/javascript">
       function handleImage(blob) {
           var reader = new FileReader();
@@ -31,6 +32,11 @@
 
       function handleText(text) {
         makePaste(text)
+          .then(resp => {
+            pasted.innerHTML = `<code>${JSON.stringify(resp)}</code>`
+          })
+          .catch(console.error)
+
       }
 
       document.onpaste = function (event) {
@@ -45,33 +51,6 @@
             item.getAsString(handleText)
           }
         }
-      }
-
-      function makePaste(body) {
-        let url = '/.netlify/functions/paste';
-        let options = {
-          method: 'POST',
-          headers: {
-            'content-type': 'application/json',
-          },
-          body,
-        }
-        if (location.host === '') {
-          url = 'https://remote-clipboard.netlify.app' + url;
-
-          options = {
-            ...options,
-            mode: 'no-cors', // no-cors, *cors, same-origin
-            credentials: 'omit', // include, *same-origin, omit
-          }
-        }
-
-        fetch(url, options)
-          .then(r => r.json())
-          .then(j => {
-            pasted.innerHTML = `<code>${JSON.stringify(j)}</code>`
-          })
-          .catch(console.error)
       }
     </script>
   </body>
