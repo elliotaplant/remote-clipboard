@@ -32,7 +32,7 @@ function getPaste() {
     };
   }
 
-  return fetch(url, options).then(r => r.json());
+  return fetch(url, options);
 }
 
 window.makePaste = makePaste;
