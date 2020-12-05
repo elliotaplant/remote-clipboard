@@ -2,76 +2,24 @@
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
+    <title>Remote Clipboard</title>
     <style media="screen">
       body {
         font-family: monospace;
         text-align: center;
       }
 
-      h1 {
-        font-size: 10vw;
+      a {
+        font-size: 20vw;
+        font-weight: bold;
+        display: block;
+        line-height: 40vh;
       }
+
     </style>
-    <title>Remote clipboard</title>
   </head>
   <body>
-    <h1>Paste</h1>
-    <button type="button" name="button" onclick="callFn()">Try fn</button>
-    <div id="pasted"></div>
-
-    <script type="text/javascript">
-      function handleImage(blob) {
-          var reader = new FileReader();
-          reader.onload = function(event) {
-            pasted.innerHTML = `<img src="${event.target.result}"/>`
-          };
-          reader.readAsDataURL(blob);
-      }
-
-      function handleText(text) {
-        makePaste(text)
-      }
-
-      document.onpaste = function (event) {
-        const { items } = (event.clipboardData  || event.originalEvent.clipboardData);
-        var blob = null;
-        for (var i = 0; i < items.length; i++) {
-          const item = items[i]
-          console.log('item', item);
-          if (item.type.indexOf('image') === 0) {
-            handleImage(item.getAsFile())
-          } else if (item.type === 'text/plain') {
-            item.getAsString(handleText)
-          }
-        }
-      }
-
-      function makePaste(body) {
-        let url = '/.netlify/functions/paste';
-        let options = {
-          method: 'POST',
-          headers: {
-            'content-type': 'application/json',
-          },
-          body,
-        }
-        if (location.host === '') {
-          url = 'https://remote-clipboard.netlify.app' + url;
-
-          options = {
-            ...options,
-            mode: 'no-cors', // no-cors, *cors, same-origin
-            credentials: 'omit', // include, *same-origin, omit
-          }
-        }
-
-        fetch(url, options)
-          .then(r => r.json())
-          .then(j => {
-            pasted.innerHTML = `<code>${JSON.stringify(j)}</code>`
-          })
-          .catch(console.error)
-      }
-    </script>
+    <a href="/paste">Paste</a>
+    <a href="/copy">Copy</a>
   </body>
 </html>

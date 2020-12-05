@@ -1,4 +1,4 @@
-const createPaste = require('./requests/airtable');
+const { createPaste } = require('./requests/airtable');
 
 exports.handler = async function(event) {
   console.log('event.body', event.body);
