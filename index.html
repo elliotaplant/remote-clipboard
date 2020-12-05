@@ -29,7 +29,7 @@
       }
 
       function handleText(text) {
-        pasted.innerHTML = `<code>${text}</code>`
+        makePaste(text)
       }
 
       document.onpaste = function (event) {
@@ -46,11 +46,19 @@
         }
       }
 
-      function callFn() {
-        fetch('/.netlify/functions/paste')
+      function makePaste(body) {
+        fetch('/.netlify/functions/paste', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body,
+          mode: 'no-cors', // no-cors, *cors, same-origin
+          credentials: 'omit', // include, *same-origin, omit
+        })
           .then(r => r.json())
           .then(j => {
-            pasted.innerHTML = `<code>${j}</code>`
+            pasted.innerHTML = `<code>${JSON.stringify(j)}</code>`
           })
           .catch(console.error)
       }
