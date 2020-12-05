@@ -15,9 +15,9 @@ async function getPastes(user_id) {
 }
 
 async function getPaste(user_id) {
-  const pastes = await getPastes(user_id);
-  if (pastes.length) {
-    return pastes[0].fields.paste;
+  const { records } = await getPastes(user_id);
+  if (records.length) {
+    return records[0].fields.paste;
   }
   return 'No paste found';
 }
