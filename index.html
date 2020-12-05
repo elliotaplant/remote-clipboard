@@ -44,6 +44,13 @@
           }
         }
       }
+
+      function callFn() {
+        fetch('/.netlify/functions/paste')
+          .then(r => r.json())
+          .then(console.log)
+          .catch(console.error)
+      }
     </script>
   </body>
 </html>
