@@ -23,13 +23,22 @@ module.exports = function request(method, url, headers = {}, body = null) {
     method: method.toUpperCase(),
     hostname: urlObject.hostname,
     port: urlObject.port,
-    path: urlObject.pathname
+    path: urlObject.pathname,
+    headers,
   };
 
   if (body) {
+    if (typeof body !== 'string') {
+      body = JSON.stringify(body);
+      options.headers = {
+        'Content-Type': 'application/json',
+        ...options.headers,
+      };
+    }
+
     options.headers = {
       'Content-Length': Buffer.byteLength(body),
-      ...headers,
+      ...options.headers,
     };
   }
 

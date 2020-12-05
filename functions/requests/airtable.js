@@ -8,21 +8,31 @@ const DEFAULT_USER_ID = 1;
 async function getPastes(user_id) {
   const resp = await request(
     'get',
-    `${API_ROOT}?maxRecords=3&view=Grid%20view&filterByFormula=%28%7Buser_id%7D%20%3D%20${user_id}%29`,
+    `${API_ROOT}?maxRecords=10&view=Grid%20view&filterByFormula=%28%7Buser_id%7D%20%3D%20${user_id}%29`,
     authHeader
   );
-  return resp;
+  return resp.body;
+}
+
+async function deletePastes(recordIds) {
+  const resp = await request(
+    'delete',
+    `${API_ROOT}?${recordIds.map(r => `records[]=${r}`).join('&')}`,
+    authHeader
+  );
+  return resp.body;
 }
 
 async function createPaste(text) {
-  await getPastes(DEFAULT_USER_ID);
-  console.log('done getting pastes');
+  const { records } = await getPastes(DEFAULT_USER_ID);
+  if (records && records.length) {
+    await deletePastes(records.map(r => r.id));
+  }
   const body = JSON.stringify({ records: [{ fields: { paste: text, user_id: DEFAULT_USER_ID } }] });
-  const headers = { ...authHeader, 'Content-Type': 'application/json' };
-
-  return request('post', API_ROOT, headers, body);
+  return request('post', API_ROOT, authHeader, body);
 }
 
 module.exports = {
-  createPaste
+  createPaste,
+  getPastes,
 };

@@ -4,8 +4,7 @@ exports.handler = async function(event) {
   console.log('event.body', event.body);
 
   try {
-    const airtableResponse = await createPaste(event.body);
-    console.log('airtableResponse', airtableResponse);
+    await createPaste(event.body);
     return {
       statusCode: 200,
       body: JSON.stringify({ message: `Created paste "${event.body}"` })
