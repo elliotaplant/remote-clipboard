@@ -26,8 +26,8 @@
             copied.innerHTML = `<code>${JSON.stringify(resp)}</code>`;
             return resp
           })
-          .then(resp => navigator.clipboard.writeText(resp));
-          .catch(console.error)
+          .then(resp => navigator.clipboard.writeText(resp))
+          .catch(console.error);
       }
 
     </script>
