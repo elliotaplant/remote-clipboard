@@ -5,6 +5,8 @@ module.exports = function request(method, url, headers = {}, body = null) {
     throw new Error(`Invalid method: ${method}`);
   }
 
+  console.log('requesting url', url);
+
   let urlObject;
 
   try {
@@ -23,7 +25,7 @@ module.exports = function request(method, url, headers = {}, body = null) {
     method: method.toUpperCase(),
     hostname: urlObject.hostname,
     port: urlObject.port,
-    path: urlObject.pathname,
+    path: urlObject.pathname + urlObject.search,
     headers,
   };
 
