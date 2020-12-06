@@ -8,7 +8,7 @@ exports.handler = async function(event) {
     return {
       statusCode: 200,
       headers: {
-        'Access-Control-Allow-Origin': '*/*'
+        'Access-Control-Allow-Origin': '*'
       },
       body: JSON.stringify({ message: `Created paste "${event.body}"` })
     };
@@ -16,7 +16,7 @@ exports.handler = async function(event) {
     return {
       statusCode: 500,
       headers: {
-        'Access-Control-Allow-Origin': '*/*'
+        'Access-Control-Allow-Origin': '*'
       },
       body: JSON.stringify({ message: `Something went wrong: "${e}"` })
     };

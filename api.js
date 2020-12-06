@@ -11,7 +11,7 @@ function makePaste(body) {
   if (location.host !== 'remote-clipboard.netlify.app') {
     options = {
       ...options,
-      mode: 'no-cors', // no-cors, *cors, same-origin
+      // mode: 'no-cors', // no-cors, *cors, same-origin
       credentials: 'omit', // include, *same-origin, omit
     };
   }
@@ -27,7 +27,7 @@ function getPaste() {
   url = 'https://remote-clipboard.netlify.app' + url;
 
   options = {
-    mode: 'no-cors', // no-cors, *cors, same-origin
+    // mode: 'no-cors', // no-cors, *cors, same-origin
     credentials: 'omit', // include, *same-origin, omit
   };
   // }
