@@ -7,9 +7,12 @@
         box-sizing: border-box;
       }
 
+      body, textarea, button {
+        font-family: "Courier New", Courier, "Lucida Sans Typewriter", "Lucida Typewriter", monospace;
+      }
+
       body {
         margin: 0 auto;
-        font-family: monospace;
         text-align: center;
         width: 80%;
         max-width: 1024px;
@@ -24,22 +27,30 @@
         font-weight: bold;
       }
 
+      textarea, button {
+        width: 100%;
+        display: block;
+      }
+
       textarea {
         height: 40vh;
-        display: block;
-        font-size: 2em;
+        font-size: 5vw;
         padding: 0.5em;
-        width: 100%;
+      }
+
+      @media screen and (min-width: 1600px) {
+        textarea {
+           font-size: 30px;
+        }
       }
 
       button {
         margin-top: 1em;
-        width: 100%;
         font-family: monospace;
         font-size: 4em;
-        display: block;
         border: 2px solid grey;
         border-radius: 4px;
+        font-family: "Courier New", Courier, "Lucida Sans Typewriter", "Lucida Typewriter", monospace;
       }
     </style>
     <title>Remote clipboard</title>
@@ -51,7 +62,6 @@
     <button type="button" id="fetchBtn">Fetch</button>
     <div id="pasted"></div>
 
-    <script type="text/javascript" src="api.js"></script>
     <script type="text/javascript">
       function makePaste(body) {
         const url = 'https://remote-clipboard.netlify.app/.netlify/functions/paste';
@@ -80,7 +90,7 @@
           pasteBtn.style.borderColor = 'grey';
           pasteBtn.style.color = 'grey';
           pasteTxt.style.borderColor = 'grey';
-        }, 1000)
+        }, 2000)
       }
 
       pasteBtn.onclick = () => handleText(pasteTxt.value);
