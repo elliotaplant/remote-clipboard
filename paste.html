@@ -12,12 +12,29 @@
         font-size: 10vw;
         font-weight: bold;
       }
+
+      textarea {
+        margin: 0 auto 2em;
+        width: 80%;
+        max-width: 1024px;
+        height: 40vh;
+        display: block;
+        font-size: 2em;
+        padding: 0.5em;
+      }
+
+      button {
+        font-family: monospace;
+        font-size: 4em;
+        width: 80%;
+        max-width: 1024px;
+      }
     </style>
     <title>Remote clipboard</title>
   </head>
   <body>
-    <h1>Paste</h1>
-    <button type="button" name="button" onclick="callFn()">Try fn</button>
+    <div id="pasted"><textarea id="pasteTxt"></textarea></div>
+    <button type="button" id="pasteBtn" onclick="callFn()">Paste</button>
     <div id="pasted"></div>
 
     <script type="text/javascript" src="api.js"></script>
@@ -31,13 +48,10 @@
       }
 
       function handleText(text) {
-        makePaste(text)
-          .then(resp => {
-            pasted.innerHTML = `<code>${JSON.stringify(resp)}</code>`
-          })
-          .catch(console.error)
-
+        makePaste(text).catch(console.error)
       }
+
+      pasteBtn.onclick = () => handleText(pasteTxt.value);
 
       document.onpaste = function (event) {
         const { items } = (event.clipboardData  || event.originalEvent.clipboardData);
