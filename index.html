@@ -3,23 +3,90 @@
   <head>
     <meta charset="utf-8">
     <style media="screen">
+      * {
+        box-sizing: border-box;
+      }
+
       body {
+        margin: 0 auto;
         font-family: monospace;
         text-align: center;
+        width: 80%;
+        max-width: 1024px;
+        display: flex;
+        align-items: center;
+        flex-direction: column;
       }
 
-      a {
-        font-size: 20vw;
+      h1 {
+        margin: 0.25em 0;
+        font-size: 10vw;
         font-weight: bold;
-        display: block;
-        line-height: 40vh;
       }
 
+      textarea {
+        height: 40vh;
+        display: block;
+        font-size: 2em;
+        padding: 0.5em;
+        width: 100%;
+      }
+
+      button {
+        margin-top: 1em;
+        width: 100%;
+        font-family: monospace;
+        font-size: 4em;
+        display: block;
+        border: 2px solid grey;
+        border-radius: 4px;
+      }
     </style>
-    <title>Remote Clipboard</title>
+    <title>Remote clipboard</title>
   </head>
   <body>
-    <a href="/paste">Paste</a>
-    <a href="/copy">Copy</a>
+    <h1>Remote Clipboard</h1>
+    <textarea id="pasteTxt" placeholder="Paste text here then click 'Paste'"></textarea>
+    <button type="button" id="pasteBtn">Paste</button>
+    <button type="button" id="fetchBtn">Fetch</button>
+    <div id="pasted"></div>
+
+    <script type="text/javascript" src="api.js"></script>
+    <script type="text/javascript">
+      function makePaste(body) {
+        const url = 'https://remote-clipboard.netlify.app/.netlify/functions/paste';
+        const options = { method: 'POST', body };
+        return fetch(url, options).then(r => r.json());
+      }
+
+      function getPaste() {
+        return fetch('https://remote-clipboard.netlify.app/.netlify/functions/copy')
+          .then(resp => resp.text())
+          .then((resp) => { pasteTxt.value = resp; })
+          .catch(console.error);
+      }
+
+      function handleText(text) {
+        makePaste(text)
+          .then(() => displaySuccess())
+          .catch(console.error)
+      }
+
+      function displaySuccess() {
+        pasteBtn.style.borderColor = '#4bb543';
+        pasteBtn.style.color = '#4bb543';
+        pasteTxt.style.borderColor = '#4bb543';
+        setTimeout(() => {
+          pasteBtn.style.borderColor = 'grey';
+          pasteBtn.style.color = 'grey';
+          pasteTxt.style.borderColor = 'grey';
+        }, 1000)
+      }
+
+      pasteBtn.onclick = () => handleText(pasteTxt.value);
+      fetchBtn.onclick = () => getPaste();
+
+      getPaste();
+    </script>
   </body>
 </html>
