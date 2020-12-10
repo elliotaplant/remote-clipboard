@@ -2,6 +2,8 @@
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
+    <link rel="icon" href="favicon.png" type="image/png">
+    <link rel="apple-touch-icon" href="favicon.png">
     <style media="screen">
       * {
         box-sizing: border-box;
@@ -19,6 +21,7 @@
         display: flex;
         align-items: center;
         flex-direction: column;
+        height: min(100vh, 1600px);
       }
 
       h1 {
@@ -30,12 +33,14 @@
       textarea, button {
         width: 100%;
         display: block;
+        border-radius: 1vh;
       }
 
       textarea {
         height: 40vh;
         font-size: 5vw;
         padding: 0.5em;
+        margin-bottom: 0.5em;
       }
 
       @media screen and (min-width: 1600px) {
@@ -45,11 +50,12 @@
       }
 
       button {
-        margin-top: 1em;
+        flex-grow: 1;
         font-family: monospace;
         font-size: 4em;
-        border: 2px solid grey;
+        border: 1px solid grey;
         border-radius: 4px;
+        margin-bottom: 0.25em;
         font-family: "Courier New", Courier, "Lucida Sans Typewriter", "Lucida Typewriter", monospace;
       }
     </style>
@@ -58,6 +64,7 @@
   <body>
     <h1>Remote Clipboard</h1>
     <textarea id="pasteTxt" placeholder="Paste text here then click 'Paste'"></textarea>
+    <button type="button" id="copyBtn">Copy</button>
     <button type="button" id="pasteBtn">Paste</button>
     <button type="button" id="fetchBtn">Fetch</button>
     <div id="pasted"></div>
@@ -73,30 +80,70 @@
         return fetch('https://remote-clipboard.netlify.app/.netlify/functions/copy')
           .then(resp => resp.text())
           .then((resp) => { pasteTxt.value = resp; })
-          .catch(console.error);
       }
 
       function handleText(text) {
         makePaste(text)
-          .then(() => displaySuccess())
+          .then(() => displaySuccess(pasteBtn))
           .catch(console.error)
       }
 
-      function displaySuccess() {
-        pasteBtn.style.borderColor = '#4bb543';
-        pasteBtn.style.color = '#4bb543';
+      function displaySuccess(element) {
+        element.style.borderColor = '#4bb543';
+        element.style.color = '#4bb543';
         pasteTxt.style.borderColor = '#4bb543';
         setTimeout(() => {
-          pasteBtn.style.borderColor = 'grey';
-          pasteBtn.style.color = 'grey';
+          element.style.borderColor = 'grey';
+          element.style.color = 'black';
           pasteTxt.style.borderColor = 'grey';
         }, 2000)
       }
 
       pasteBtn.onclick = () => handleText(pasteTxt.value);
-      fetchBtn.onclick = () => getPaste();
+      fetchBtn.onclick = () => getPaste().then(() => displaySuccess(fetchBtn)).catch(console.error);
+      copyBtn.onclick = () => copyToClipboard(pasteTxt.value);
 
-      getPaste();
+      getPaste().catch(console.error);
+
+      const copyToClipboard = (function(window, document, navigator) {
+        let copy;
+
+        function isOS() {
+          return navigator.userAgent.match(/ipad|iphone/i);
+        }
+
+        function createTextArea(text) {
+          const textarea = document.createElement('textarea');
+          textarea.value = text;
+          document.body.appendChild(textarea);
+          return textarea;
+        }
+
+        function selectText(textarea) {
+          if (isOS()) {
+            const range = document.createRange();
+            range.selectNodeContents(textarea);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            textarea.setSelectionRange(0, 999999);
+          } else {
+            textarea.select();
+          }
+        }
+
+        function copyToClipboard(textarea) {
+          document.execCommand('copy');
+          document.body.removeChild(textarea);
+        }
+
+        return function(text) {
+          const textarea = createTextArea(text);
+          selectText(textarea);
+          copyToClipboard(textarea);
+          displaySuccess(copyBtn)
+        };
+      })(window, document, navigator);
     </script>
   </body>
 </html>
