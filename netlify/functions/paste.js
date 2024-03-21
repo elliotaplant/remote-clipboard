@@ -5,6 +5,7 @@ exports.handler = async function (event) {
       method: "PUT",
       body: event.body,
     });
+
     return {
       statusCode: 200,
       body: JSON.stringify({ message: "Created paste" }),
